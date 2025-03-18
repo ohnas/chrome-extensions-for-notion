@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Notion Database Reader",
+    "version": "1.0",
+    "description": "Notion API를 이용하여 데이터베이스 읽기",
+    "permissions": ["storage"],
+    "background": {
+      "service_worker": "src/js/background.js"
+    },
+    "host_permissions": ["https://api.notion.com/*"],
+    "action": {
+      "default_popup": "public/popup.html",
+      "default_icon": {
+        "16": "public/icon-16.png",
+        "32": "public/icon-32.png",
+        "48": "public/icon-48.png",
+        "128": "public/icon-128.png"
+      }
+    }
+  }
+  
