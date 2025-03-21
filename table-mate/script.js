@@ -1,30 +1,53 @@
 const table = document.querySelector("#dataTable");
+let isDragging = false;  // 드래그 중인지 확인하는 변수
+let selectedCells = new Set();  // 선택된 셀 저장
+let selectedData = [];  // 선택된 데이터 저장
 
-// 셀 클릭 이벤트 핸들러
-function handleCellClick(event) {
-    let cell = event.target;
-    
-    // 클릭한 요소가 'td'일 때만 처리
-    if (cell.tagName === "TD") {
-        const rowIndex = cell.parentNode.rowIndex; // 행 번호
-        const colIndex = cell.cellIndex; // 열 번호
-        const value = cell.innerText; // 클릭한 셀의 데이터
-        toggleCellSelection(cell);
-        logCellData(rowIndex, colIndex, value);
+// 마우스 클릭 시 (선택 시작)
+function handleMouseDown(event) {
+    if (event.target.tagName === "TD") {
+        isDragging = true;
+        clearSelection();  // 기존 선택 해제
+        selectCell(event.target);
     }
 }
 
-// 선택된 셀에 .selected 클래스 추가/제거
-function toggleCellSelection(cell) {
-    if (cell.classList.contains("selected")) {
-        cell.classList.remove("selected"); // 선택 해제
-    } else {
-        cell.classList.add("selected"); // 선택된 상태
+// 마우스 이동 시 (드래그 선택)
+function handleMouseMove(event) {
+    if (isDragging && event.target.tagName === "TD") {
+        selectCell(event.target);
     }
 }
 
-function logCellData(row, col, value) {
-    console.log(`클릭한 셀: 행 ${row}, 열 ${col}, 값: ${value}`);
+// 마우스 떼면 (선택 종료 & 데이터 출력)
+function handleMouseUp() {
+    if (isDragging) {
+        isDragging = false;
+        printSelectedData();
+    }
 }
 
-table.addEventListener("click", handleCellClick);
+// 셀 선택 (클래스 추가 & 리스트에 저장)
+function selectCell(cell) {
+    if (!selectedCells.has(cell)) {
+        cell.classList.add("selected");
+        selectedCells.add(cell);
+    }
+}
+
+// 선택된 데이터 리스트 초기화
+function clearSelection() {
+    selectedCells.forEach(cell => cell.classList.remove("selected"));
+    selectedCells.clear();
+}
+
+// 선택된 데이터 콘솔 출력
+function printSelectedData() {
+    selectedData = [...selectedCells].map(cell => cell.innerText);
+    console.log("선택된 데이터:", selectedData);
+}
+
+// 이벤트 리스너 추가
+table.addEventListener("mousedown", handleMouseDown);
+table.addEventListener("mousemove", handleMouseMove);
+document.addEventListener("mouseup", handleMouseUp);
