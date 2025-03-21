@@ -9,8 +9,17 @@ function handleCellClick(event) {
         const rowIndex = cell.parentNode.rowIndex; // 행 번호
         const colIndex = cell.cellIndex; // 열 번호
         const value = cell.innerText; // 클릭한 셀의 데이터
-        
+        toggleCellSelection(cell);
         logCellData(rowIndex, colIndex, value);
+    }
+}
+
+// 선택된 셀에 .selected 클래스 추가/제거
+function toggleCellSelection(cell) {
+    if (cell.classList.contains("selected")) {
+        cell.classList.remove("selected"); // 선택 해제
+    } else {
+        cell.classList.add("selected"); // 선택된 상태
     }
 }
 
