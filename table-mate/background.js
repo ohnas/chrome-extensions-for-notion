@@ -11,9 +11,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             // background → content.js로 메시지 전송
             chrome.tabs.sendMessage(tab.id, {
-            action: message.action === "startExtension"
-                ? "activateSelectionMode"
-                : "deactivateSelectionMode"
+                action: message.action === "startExtension" ? "activateSelectionMode" : "deactivateSelectionMode"
             });
         });
     }

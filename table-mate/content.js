@@ -58,17 +58,31 @@ function sendSelectedData() {
   chrome.runtime.sendMessage({ action: "updateData", data: selectedData });
 }
 
+function forceCursor(cursorType) {
+    const existingStyle = document.getElementById("tablemate-cursor-style");
+
+    if (existingStyle) {
+        existingStyle.textContent = `* { cursor: ${cursorType} !important; }`;
+    } else {
+        const style = document.createElement("style");
+        style.id = "tablemate-cursor-style";
+        style.textContent = `* { cursor: ${cursorType} !important; }`;
+        document.head.appendChild(style);
+    }
+}
+  
+
 // ✅ background.js에서 보내는 메시지 처리
 chrome.runtime.onMessage.addListener((message) => {
-  if (message.action === "activateSelectionMode") {
-    console.log("[TableMate] 커서 crosshair로 변경");
-    document.body.style.cursor = "crosshair";
-    enableTableSelection(); // 셀 선택도 함께 활성화
-  }
-
-  if (message.action === "deactivateSelectionMode") {
-    console.log("[TableMate] 커서 default로 복귀");
-    document.body.style.cursor = "default";
-    clearSelection(); // 선택 해제
-  }
+    if (message.action === "activateSelectionMode") {
+        console.log("[TableMate] 커서 crosshair로 변경");
+        forceCursor("crosshair");
+        enableTableSelection();
+    }
+      
+    if (message.action === "deactivateSelectionMode") {
+        console.log("[TableMate] 커서 default로 복귀");
+        forceCursor("default");
+        clearSelection();
+    }
 });
