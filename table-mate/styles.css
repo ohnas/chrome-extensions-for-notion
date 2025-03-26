@@ -1,0 +1,5 @@
+/* 선택된 셀에 적용할 TableMate 전용 스타일 */
+.notion-table-view-cell.selected {
+    background-color: rgba(255, 255, 0, 0.3); /* 투명한 노란색 */
+    transition: background-color 0.2s ease;
+}
