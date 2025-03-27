@@ -71,7 +71,6 @@ function stopEvent(event) {
 function handleMouseDown(event) {
   isDragging = true;
   const cell = event.currentTarget;
-  console.log(cell);
   clearSelection();
   selectCell(cell);
 }
@@ -80,7 +79,6 @@ function handleMouseDown(event) {
 function handleMouseMove(event) {
   if (!isDragging) return;
   const cell = event.currentTarget;
-  console.log(cell);
   selectCell(cell);
 }
 
@@ -108,10 +106,9 @@ function clearSelection() {
 
 // ✅ 선택된 데이터 전송 (background로)
 function sendSelectedData() {
-  console.log(selectedCells);
   const selectedData = [...selectedCells].map(cell => cell.innerText);
   console.log(selectedData);
-  // chrome.runtime.sendMessage({ action: "updateData", data: selectedData });
+  chrome.runtime.sendMessage({ action: "updateData", data: selectedData });
 }
 
 // ✅ 커서 변경
