@@ -3,3 +3,36 @@
     background-color: rgba(255, 255, 0, 0.3); /* 투명한 노란색 */
     transition: background-color 0.2s ease;
 }
+
+/* 테이블 강조 효과 */
+/* .highlighted-table {
+    box-shadow: 0 0 30px 10px rgba(255, 255, 0, 1) !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    overflow: visible !important;
+    outline: 2px solid yellow !important;
+} */
+
+
+/* 강조된 테이블 스타일 */
+.highlighted-table {
+    box-shadow: 0 4px 15px rgba(255, 255, 100, 0.7); /* 은은한 노란빛 */
+    border-radius: 8px;
+    background-color: rgba(255, 255, 200, 0.03); /* 테이블 안도 살짝 밝게 */
+    position: relative;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    outline: 2px solid rgba(255, 255, 150, 0.3);
+}
+  
+/* 회색 레이어 (나머지 영역 흐리게) */
+#tablemate-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 30, 30, 0.5); /* 회색 반투명 */
+    z-index: 9990;
+    pointer-events: none; /* 클릭 막지 않음 */
+}

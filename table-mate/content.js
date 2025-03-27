@@ -67,6 +67,7 @@ function stopEvent(event) {
   event.preventDefault();
 }
 
+
 // ✅ 마우스 클릭 (선택 시작)
 function handleMouseDown(event) {
   isDragging = true;
@@ -106,10 +107,20 @@ function clearSelection() {
 
 // ✅ 선택된 데이터 전송 (background로)
 function sendSelectedData() {
-  const selectedData = [...selectedCells].map(cell => cell.innerText);
-  console.log(selectedData);
-  chrome.runtime.sendMessage({ action: "updateData", data: selectedData });
+  const rawValues = [...selectedCells].map(cell => cell.innerText.trim());
+
+  const isNumericArray = rawValues.every(value => /^-?\d+(\.\d+)?$/.test(value));
+
+  const parsedData = {
+    type: isNumericArray ? "number" : "text",
+    content: isNumericArray ? rawValues.map(Number) : rawValues
+  };
+
+  console.log("[TableMate] 전송할 데이터:", parsedData);
+
+  chrome.runtime.sendMessage({ action: "updateData", data: parsedData });
 }
+
 
 // ✅ 커서 변경
 function forceCursor(cursorType) {
@@ -131,6 +142,7 @@ chrome.runtime.onMessage.addListener((message) => {
     forceCursor("crosshair");
     preventNotionEditBehavior(); // 🛡️ 편집 진입 차단
     enableTableSelection();
+    // highlightNotionTables();
   }
 
   if (message.action === "deactivateSelectionMode") {
@@ -139,5 +151,61 @@ chrome.runtime.onMessage.addListener((message) => {
     restoreNotionEditBehavior(); // 🔓 편집 진입 복원
     clearSelection();
     disableTableSelection(); // ✅ 셀 이벤트 제거
+    // removeHighlightFromTables();
   }
 });
+
+
+
+// // ✅ 테이블 하이라이팅 적용
+// function highlightNotionTables() {
+//   console.log("[TableMate] 테이블 하이라이팅 적용");
+
+//   // overflow: visible 설정
+//   fixTableContainersOverflow();
+
+//   // 회색 배경 오버레이 추가
+//   if (!document.getElementById("tablemate-overlay")) {
+//     const overlay = document.createElement("div");
+//     overlay.id = "tablemate-overlay";
+//     document.body.appendChild(overlay);
+//   }
+
+//   // 각 테이블에 강조 클래스 추가
+//   document.querySelectorAll(".notion-table-view").forEach(table => {
+//     table.classList.add("highlighted-table");
+//   });
+// }
+
+// // ✅ 테이블 하이라이팅 제거
+// function unhighlightNotionTables() {
+//   console.log("[TableMate] 테이블 하이라이팅 제거");
+
+//   // 강조 클래스 제거
+//   document.querySelectorAll(".notion-table-view").forEach(table => {
+//     table.classList.remove("highlighted-table");
+//   });
+
+//   // overlay 제거
+//   const overlay = document.getElementById("tablemate-overlay");
+//   if (overlay) overlay.remove();
+
+//   // overflow 원래대로 복원
+//   restoreTableContainersOverflow();
+// }
+
+// // ✅ 강조 보이게 하기 위한 overflow 수정
+// function fixTableContainersOverflow() {
+//   const containers = document.querySelectorAll(".notion-scroller.horizontal.notion-collection-view-body");
+//   containers.forEach(container => {
+//     container.style.overflow = "visible";
+//   });
+// }
+
+// // ✅ 원래 overflow 상태로 복원
+// function restoreTableContainersOverflow() {
+//   const containers = document.querySelectorAll(".notion-scroller.horizontal.notion-collection-view-body");
+//   containers.forEach(container => {
+//     container.style.overflow = "auto";
+//   });
+// }
